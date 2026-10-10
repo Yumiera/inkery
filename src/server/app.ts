@@ -8,6 +8,7 @@ import type { LoadedConfig, LoadedHolder } from '../config/load';
 import { ContentStore } from '../content/store';
 import { MarkdownEngine } from '../markdown/renderer';
 import { authMiddleware, createToken, tokenCookieMiddleware } from './auth';
+import { reloadConfig } from './config-reload';
 import { LiveReloadHub } from './live-reload';
 import { BuildManager, createBuildRoutes } from './routes/build';
 import { createAutosaveRoutes } from './routes/autosave';
@@ -48,6 +49,8 @@ export interface BlogServerApp {
   builds: BuildManager;
   deploys: DeployManager;
   mode: ServerMode;
+  /** 重新读取配置文件并刷新 store / engine（供墨台保存与文件监听复用） */
+  reloadConfig(): Promise<void>;
   close(): Promise<void>;
 }
 
@@ -133,6 +136,9 @@ export function createBlogServer(options: CreateServerOptions): BlogServerApp {
     builds: ctx.builds,
     deploys: ctx.deploys,
     mode,
+    reloadConfig: async () => {
+      await reloadConfig(ctx);
+    },
     close: async () => {
       hub.closeAll();
     },

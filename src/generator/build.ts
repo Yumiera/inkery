@@ -879,7 +879,7 @@ export class SiteBuilder {
               route.url,
               'page',
               `${page.frontmatter.title}${TITLE_SEP}${this.site.title}`,
-              page.frontmatter.description ?? this.site.description,
+              page.frontmatter.description ?? doc.excerpt ?? this.site.description,
             ),
           ),
           post: {

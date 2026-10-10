@@ -2,12 +2,11 @@ import fs from 'node:fs/promises';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { defaultConfig } from '../../config/defaults';
-import { deepMerge, loadConfig, type LoadedConfig } from '../../config/load';
+import { deepMerge, type LoadedConfig } from '../../config/load';
 import { configSchema, formatZodIssues } from '../../config/schema';
-import { ContentStore } from '../../content/store';
 import { pagesUrl, resolveDeploySettings } from '../../deploy/publish';
-import { MarkdownEngine } from '../../markdown/renderer';
 import { normalizeBaseUrl, relPath } from '../../util/paths';
+import { reloadConfig } from '../config-reload';
 import type { ServerContext } from '../app';
 
 const httpUrl = z
@@ -167,10 +166,7 @@ export function createConfigRoutes(ctx: ServerContext): Hono {
 
     await fs.writeFile(configPath, `${JSON.stringify(nextRaw, null, 2)}\n`, 'utf8');
 
-    const next = await loadConfig({ configPath });
-    ctx.loaded = next;
-    ctx.store = new ContentStore(next);
-    ctx.engine = new MarkdownEngine(next);
+    const next = await reloadConfig(ctx);
 
     const { id, reused } = ctx.builds.start();
 

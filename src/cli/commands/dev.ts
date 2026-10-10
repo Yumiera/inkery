@@ -105,6 +105,7 @@ export async function run(argv: string[]): Promise<number> {
   const pending = new Set<string>();
   let timer: NodeJS.Timeout | null = null;
   let rebuilding = false;
+  const configRel = path.relative(loaded.root, loaded.configPath);
 
   const flush = (): void => {
     timer = null;
@@ -116,15 +117,29 @@ export async function run(argv: string[]): Promise<number> {
     }
     rebuilding = true;
     log.step(`变更：${changed.join('，')}`);
-    void blog.builds
-      .start({ onProgress: (p) => log.debug(`[${p.phase}] ${p.message}`) })
-      .done.then(() => {
+
+    const run = async (): Promise<void> => {
+      // 直接编辑配置文件的场景必须先重载配置，否则构建仍用启动时读入的那份
+      if (changed.includes(configRel)) {
+        await blog.reloadConfig();
+        log.success('配置已重新加载');
+      }
+      await blog.builds.start({ onProgress: (p) => log.debug(`[${p.phase}] ${p.message}`) }).done;
+    };
+
+    void run()
+      .then(() => {
         const latest = blog.builds.latest;
         if (latest?.status === 'done') {
           log.success(`已重建 · ${latest.changedUrls.length} 个 URL 变化`);
         } else {
           log.error(`重建失败：${latest?.errors.join('；') ?? '未知错误'}`);
         }
+      })
+      .catch((error: unknown) => {
+        log.error(`重建失败：${messageOf(error)}`);
+      })
+      .finally(() => {
         rebuilding = false;
         if (pending.size > 0 && timer === null) timer = setTimeout(flush, 200);
       });
