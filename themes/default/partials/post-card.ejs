@@ -4,7 +4,7 @@
     <div class="post-card-dates">
       <time class="post-card-date" datetime="<%= helpers.dateTime(post.date) %>"><%= helpers.formatDate(post.date) %></time>
       <% if (post.updated !== post.date) { %>
-        <span class="sep" aria-hidden="true">·</span>
+        <span class="sep" aria-hidden="true"></span>
         <time class="post-card-updated" datetime="<%= helpers.dateTime(post.updated) %>" title="最后修订 <%= post.updated %>">修订 <%= helpers.formatDate(post.updated) %></time>
       <% } %>
     </div>
@@ -12,7 +12,7 @@
   <% if (post.excerpt) { %><p class="post-card-excerpt"><%= post.excerpt %></p><% } %>
   <div class="post-card-meta">
     <% for (const category of post.categories) { %><a class="post-card-cat" href="<%= category.url %>"><%= category.name %></a><% } %>
-    <% if (post.categories.length > 0 && theme.showReadingTime) { %><span class="sep">·</span><% } %>
+    <% if (post.categories.length > 0 && theme.showReadingTime) { %><span class="sep" aria-hidden="true"></span><% } %>
     <% if (theme.showReadingTime) { %><span><%= helpers.readingLabel(post.readingTime) %></span><% } %>
     <% if (post.state === 'draft') { %><span class="badge badge-draft">草稿</span><% } %>
     <% if (post.state === 'scheduled') { %><span class="badge badge-scheduled">定时</span><% } %>

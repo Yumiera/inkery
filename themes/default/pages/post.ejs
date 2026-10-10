@@ -7,8 +7,8 @@
         <h1 class="post-title"><%= post.title %></h1>
         <div class="post-meta">
           <time datetime="<%= helpers.dateTime(post.date) %>"><%= helpers.formatDate(post.date, 'long') %></time>
-          <% if (theme.showReadingTime) { %><span class="sep">·</span><span><%= helpers.readingLabel(post.readingTime) %></span><% } %>
-          <span class="sep">·</span><span><%= post.wordCount %> 字</span>
+          <% if (theme.showReadingTime) { %><span class="sep" aria-hidden="true"></span><span><%= helpers.readingLabel(post.readingTime) %></span><% } %>
+          <span class="sep" aria-hidden="true"></span><span><%= post.wordCount %> 字</span>
           <% if (post.state !== 'published') { %>
             <span class="badge badge-<%= post.state %>"><%= post.state === 'draft' ? '草稿' : '定时' %></span>
           <% } %>

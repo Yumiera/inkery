@@ -216,8 +216,13 @@ hr {
 }
 
 .sep {
+  display: inline-block;
+  width: 1px;
+  height: 10px;
   margin: 0 0.35em;
-  color: var(--border-strong);
+  background: var(--border-strong);
+  vertical-align: -1px;
+  flex: none;
 }
 
 .container {
@@ -1549,9 +1554,12 @@ a.page-link:hover {
   text-decoration: none;
 }
 
+/* flex 容器里间距由 gap 提供，分隔条自身不再留边距 */
+.post-meta .sep,
+.post-card-meta .sep,
+.post-card-dates .sep,
 .footer-links .sep {
   margin: 0;
-  color: var(--border-strong);
 }
 
 .footer-powered {
