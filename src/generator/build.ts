@@ -70,6 +70,9 @@ export interface BuildStats {
   removed: number;
 }
 
+/** 网页 <title> 分隔符：竖线在搜索结果的站点名切分上比间隔号更明确 */
+const TITLE_SEP = ' | ';
+
 export interface BuildResult {
   stats: BuildStats;
   changedUrls: string[];
@@ -731,7 +734,7 @@ export class SiteBuilder {
       case 'index': {
         const posts = route.slugs.map((slug) => ctx.toView(ctx.entryBySlug.get(slug)!));
         const first = route.page <= 1;
-        const title = first ? this.site.title : `${this.site.title} · 第 ${route.page} 页`;
+        const title = first ? this.site.title : `${this.site.title}${TITLE_SEP}第 ${route.page} 页`;
         const description = first
           ? this.site.description
           : `第 ${route.page} 页（共 ${route.totalPages} 页），继续浏览 ${this.site.title} 的历史文章。`;
@@ -769,7 +772,7 @@ export class SiteBuilder {
             : `按年份归档：${archive.map((group) => `${group.year} 年 ${group.posts.length} 篇`).join('，')}。`;
         const data = {
           ...this.baseData(
-            this.pageMeta(route.url, 'archive', `归档 · ${this.site.title}`, description),
+            this.pageMeta(route.url, 'archive', `归档${TITLE_SEP}${this.site.title}`, description),
           ),
           posts,
           archive,
@@ -791,7 +794,7 @@ export class SiteBuilder {
         const description = `${label}总览：共 ${terms.length} 个${label}，覆盖 ${covered} 篇文章。`;
         const data = {
           ...this.baseData(
-            this.pageMeta(route.url, 'taxonomy', `${label} · ${this.site.title}`, description),
+            this.pageMeta(route.url, 'taxonomy', `${label}${TITLE_SEP}${this.site.title}`, description),
           ),
           taxonomy: route.taxonomy,
           terms,
@@ -807,8 +810,8 @@ export class SiteBuilder {
         const name = route.term.name;
         const first = route.page <= 1;
         const title = first
-          ? `${name} · ${label} · ${this.site.title}`
-          : `${name} · ${label} · 第 ${route.page} 页 · ${this.site.title}`;
+          ? `${name}${TITLE_SEP}${label}${TITLE_SEP}${this.site.title}`
+          : `${name}${TITLE_SEP}${label}${TITLE_SEP}第 ${route.page} 页${TITLE_SEP}${this.site.title}`;
         const preview = posts.slice(0, 4).map((view) => view.title).join('、');
         const full = `「${name}」${label}下共 ${route.term.count} 篇文章：${preview} 等。`;
         const description = full.length > 80 ? `${full.slice(0, 80)}…` : full;
@@ -869,7 +872,7 @@ export class SiteBuilder {
             this.pageMeta(
               route.url,
               'page',
-              `${page.frontmatter.title} · ${this.site.title}`,
+              `${page.frontmatter.title}${TITLE_SEP}${this.site.title}`,
               page.frontmatter.description ?? this.site.description,
             ),
           ),
@@ -907,7 +910,7 @@ export class SiteBuilder {
       case 'notfound': {
         const data = {
           ...this.baseData(
-            this.pageMeta(route.url, 'notfound', `404 · ${this.site.title}`, '', false, 'noindex,follow'),
+            this.pageMeta(route.url, 'notfound', `404${TITLE_SEP}${this.site.title}`, '', false, 'noindex,follow'),
           ),
         };
         return this.templates.renderPage('pages/404.ejs', data);
@@ -920,7 +923,7 @@ export class SiteBuilder {
           `<html lang="${escapeHtml(this.site.lang)}">`,
           '<head>',
           '<meta charset="utf-8">',
-          `<title>跳转中 · ${escapeHtml(this.site.title)}</title>`,
+          `<title>跳转中${TITLE_SEP}${escapeHtml(this.site.title)}</title>`,
           `<link rel="canonical" href="${escapeHtml(target)}">`,
           `<meta http-equiv="refresh" content="0; url=${escapeHtml(target)}">`,
           '<meta name="robots" content="noindex,follow">',
@@ -947,7 +950,7 @@ export class SiteBuilder {
         this.pageMeta(
           route.url,
           'post',
-          `${view.title} · ${this.site.title}`,
+          `${view.title}${TITLE_SEP}${this.site.title}`,
           view.description,
           false,
           'index,follow',
