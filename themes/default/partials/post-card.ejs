@@ -1,7 +1,13 @@
 <article class="post-card">
   <div class="post-card-headline">
     <h2 class="post-card-title"><a href="<%= post.url %>"><%= post.title %></a></h2>
-    <time class="post-card-date" datetime="<%= helpers.dateTime(post.date) %>"><%= helpers.formatDate(post.date) %></time>
+    <div class="post-card-dates">
+      <time class="post-card-date" datetime="<%= helpers.dateTime(post.date) %>"><%= helpers.formatDate(post.date) %></time>
+      <% if (post.updated !== post.date) { %>
+        <span class="sep" aria-hidden="true">·</span>
+        <time class="post-card-updated" datetime="<%= helpers.dateTime(post.updated) %>" title="最后修订 <%= post.updated %>">修订 <%= helpers.formatDate(post.updated) %></time>
+      <% } %>
+    </div>
   </div>
   <% if (post.excerpt) { %><p class="post-card-excerpt"><%= post.excerpt %></p><% } %>
   <div class="post-card-meta">
