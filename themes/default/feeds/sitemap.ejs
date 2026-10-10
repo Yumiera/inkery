@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<% for (const entry of entries) { %>
+  <url>
+    <loc><%= entry.loc %></loc>
+<% if (entry.lastmod) { %>    <lastmod><%= entry.lastmod %></lastmod>
+<% } %>    <changefreq><%= entry.changefreq %></changefreq>
+    <priority><%= entry.priority %></priority>
+<% for (const image of entry.images) { %>    <image:image><image:loc><%= image %></image:loc></image:image>
+<% } %>  </url>
+<% } %>
+</urlset>

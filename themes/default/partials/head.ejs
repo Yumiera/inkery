@@ -1,0 +1,52 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= page.title %></title>
+<% if (page.description) { %><meta name="description" content="<%= page.description %>">
+<% } %><% if (site.keywords.length > 0) { %><meta name="keywords" content="<%= site.keywords.join(',') %>">
+<% } %><% if (site.author) { %><meta name="author" content="<%= site.author %>">
+<% } %><meta name="robots" content="<%= page.robots %>">
+<link rel="canonical" href="<%= page.canonical %>">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fefdfa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1918" media="(prefers-color-scheme: dark)">
+<% if (site.favicon) { %><link rel="icon" href="<%= helpers.url(site.favicon) %>">
+<link rel="apple-touch-icon" href="<%= helpers.url(site.favicon) %>">
+<% } %><link rel="alternate" type="application/rss+xml" title="<%= site.title %>" href="<%= helpers.url('/feed.xml') %>">
+<%- include('/partials/seo') %>
+<%- include('/partials/jsonld') %>
+<%- include('/partials/hreflang') %>
+<script>
+(function () {
+  var root = document.documentElement;
+  var mode = root.getAttribute('data-color-mode') || 'auto';
+  var resolved = mode;
+  try {
+    var stored = localStorage.getItem('inkery-color-mode');
+    if (mode === 'auto') {
+      resolved = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    }
+  } catch (error) {
+    resolved = mode === 'dark' ? 'dark' : 'light';
+  }
+  root.setAttribute('data-resolved-mode', resolved);
+  if (resolved === 'dark') root.classList.add('dark');
+})();
+</script>
+<link rel="stylesheet" href="<%= theme.assets.css %>?v=<%= theme.assets.version %>">
+<style>
+:root{
+  --accent-light:<%= theme.accentColor %>;
+  --accent:var(--accent-light);
+  --accent-soft:color-mix(in srgb,var(--accent) 12%,transparent);
+  --link:color-mix(in srgb,var(--accent) 82%,#000);
+  --accent-solid:var(--link);
+  --accent-on:#ffffff;
+}
+html.dark{
+  --accent:color-mix(in srgb,var(--accent-light) 74%,#fff);
+  --accent-soft:color-mix(in srgb,var(--accent) 20%,transparent);
+  --link:var(--accent);
+  --accent-solid:var(--accent);
+  --accent-on:#1a1918;
+}
+</style>

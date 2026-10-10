@@ -1,0 +1,12 @@
+<% if (toc.length > 1) { %>
+<nav class="toc" aria-labelledby="toc-title" data-toc>
+  <p class="toc-title" id="toc-title">目录</p>
+  <ul class="toc-list">
+    <% for (const item of toc) { %>
+      <li class="toc-item toc-level-<%= item.level %>">
+        <a href="#<%= item.id %>" data-toc-link="<%= item.id %>"><%= item.text %></a>
+      </li>
+    <% } %>
+  </ul>
+</nav>
+<% } %>

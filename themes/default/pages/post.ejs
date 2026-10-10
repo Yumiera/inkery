@@ -1,0 +1,74 @@
+<div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
+<div class="container">
+  <%- include('/partials/breadcrumb') %>
+  <div class="post-layout<%= toc.length > 1 ? '' : ' no-toc' %>">
+    <article class="post">
+      <header class="post-header">
+        <h1 class="post-title"><%= post.title %></h1>
+        <div class="post-meta">
+          <time datetime="<%= helpers.dateTime(post.date) %>"><%= helpers.formatDate(post.date, 'long') %></time>
+          <% if (theme.showReadingTime) { %><span class="sep">·</span><span><%= helpers.readingLabel(post.readingTime) %></span><% } %>
+          <span class="sep">·</span><span><%= post.wordCount %> 字</span>
+          <% if (post.state !== 'published') { %>
+            <span class="badge badge-<%= post.state %>"><%= post.state === 'draft' ? '草稿' : '定时' %></span>
+          <% } %>
+        </div>
+        <% if (post.categories.length > 0 || post.tags.length > 0) { %>
+          <div class="post-taxonomy">
+            <% for (const category of post.categories) { %><a class="chip chip-category" href="<%= category.url %>"><%= category.name %></a><% } %>
+            <% for (const tag of post.tags) { %><a class="chip" href="<%= tag.url %>">#<%= tag.name %></a><% } %>
+          </div>
+        <% } %>
+      </header>
+
+      <% if (post.cover) { %>
+        <figure class="post-cover"><img src="<%= post.cover %>" alt="<%= post.coverAlt %>"<% if (post.coverWidth) { %> width="<%= post.coverWidth %>" height="<%= post.coverHeight %>"<% } %> loading="eager" fetchpriority="high" decoding="async"<% if (post.coverSrcset) { %> srcset="<%= post.coverSrcset %>" sizes="(max-width: 960px) 100vw, 720px"<% } %>></figure>
+      <% } %>
+
+      <% if (toc.length > 1) { %>
+        <details class="post-toc-inline">
+          <summary>目录</summary>
+          <%- include('/partials/toc') %>
+        </details>
+      <% } %>
+
+      <div class="post-body">
+        <%- post.html %>
+      </div>
+
+      <footer class="post-footer">
+        <% if (post.prev || post.next) { %>
+          <nav class="post-neighbours">
+            <% if (post.prev) { %>
+              <a class="neighbour neighbour-prev" href="<%= post.prev.url %>">
+                <svg class="neighbour-arrow" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
+                <span class="neighbour-text">
+                  <span class="neighbour-label">上一篇</span>
+                  <span class="neighbour-title"><%= post.prev.title %></span>
+                </span>
+              </a>
+            <% } else { %><span class="neighbour is-empty"></span><% } %>
+            <% if (post.next) { %>
+              <a class="neighbour neighbour-next" href="<%= post.next.url %>">
+                <svg class="neighbour-arrow" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 5.5 16 12l-6.5 6.5"/></svg>
+                <span class="neighbour-text">
+                  <span class="neighbour-label">下一篇</span>
+                  <span class="neighbour-title"><%= post.next.title %></span>
+                </span>
+              </a>
+            <% } else { %><span class="neighbour is-empty"></span><% } %>
+          </nav>
+        <% } %>
+        <a class="back-home" href="<%= helpers.url('/') %>">返回首页<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></a>
+      </footer>
+    </article>
+
+    <% if (toc.length > 1) { %>
+      <aside class="post-aside">
+        <div class="post-aside-sticky">
+          <%- include('/partials/toc') %>
+        </div>
+      </aside>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <% if (site.subtitle) { %><p class="footer-tagline"><%= site.subtitle %></p><% } %>
+    <ul class="footer-links">
+      <li><a href="<%= helpers.url('/feed.xml') %>">RSS</a></li>
+      <li class="sep" aria-hidden="true">|</li>
+      <li><a href="<%= helpers.url('/sitemap.xml') %>">Sitemap</a></li>
+      <% for (const item of social) { %>
+        <li class="sep" aria-hidden="true">|</li>
+        <li><a href="<%= item.link %>" rel="noopener" target="_blank"><%= item.name %></a></li>
+      <% } %>
+    </ul>
+    <% if (site.footerHtml) { %><div class="footer-html"><%- site.footerHtml %></div><% } %>
+    <p class="footer-copy">
+      &copy; <%= year %> <a href="<%= helpers.url('/') %>"><%= site.title %></a>
+      <% if (site.author) { %><span class="sep">·</span><%= site.author %><% } %>
+    </p>
+    <p class="footer-powered">Powered by <a href="https://github.com/" rel="noopener" target="_blank">Inkery</a></p>
+  </div>
+</footer>

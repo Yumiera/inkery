@@ -1,0 +1,21 @@
+<meta property="og:type" content="<%= page.type === 'post' ? 'article' : 'website' %>">
+<meta property="og:title" content="<%= page.title %>">
+<% if (page.description) { %><meta property="og:description" content="<%= page.description %>">
+<% } %><meta property="og:url" content="<%= page.canonical %>">
+<meta property="og:site_name" content="<%= site.title %>">
+<meta property="og:locale" content="<%= page.lang.replace(/-/g, '_') %>">
+<% if (ogImage) { %><meta property="og:image" content="<%= ogImage.url %>">
+<% if (ogImage.width) { %><meta property="og:image:width" content="<%= ogImage.width %>">
+<meta property="og:image:height" content="<%= ogImage.height %>">
+<% } %><meta property="og:image:alt" content="<%= ogImage.alt %>">
+<% } %><% if (post && page.type === 'post') { %><meta property="article:published_time" content="<%= helpers.dateTime(post.date) %>">
+<% if (post.updated) { %><meta property="article:modified_time" content="<%= helpers.dateTime(post.updated) %>">
+<% } %><% if (site.author) { %><meta property="article:author" content="<%= site.author %>">
+<% } %><% for (const category of post.categories) { %><meta property="article:section" content="<%= category.name %>">
+<% } %><% for (const tag of post.tags) { %><meta property="article:tag" content="<%= tag.name %>">
+<% } %><% } %><meta name="twitter:card" content="<%= ogImage ? 'summary_large_image' : 'summary' %>">
+<meta name="twitter:title" content="<%= page.title %>">
+<% if (page.description) { %><meta name="twitter:description" content="<%= page.description %>">
+<% } %><% if (ogImage) { %><meta name="twitter:image" content="<%= ogImage.url %>">
+<meta name="twitter:image:alt" content="<%= ogImage.alt %>">
+<% } %><meta name="generator" content="Inkery">

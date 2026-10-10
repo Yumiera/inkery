@@ -1,0 +1,21 @@
+<div class="container">
+  <header class="page-head">
+    <h1 class="page-title"><%= taxonomy === 'tags' ? '标签' : '分类' %></h1>
+    <p class="page-sub">共 <%= terms.length %> 个</p>
+  </header>
+
+  <% if (terms.length === 0) { %>
+    <p class="empty">暂无<%= taxonomy === 'tags' ? '标签' : '分类' %>。</p>
+  <% } else { %>
+    <ul class="term-cloud">
+      <% for (const term of terms) { %>
+        <li class="term-item">
+          <a class="term-link" href="<%= term.url %>">
+            <span class="term-name"><%= term.name %></span>
+            <span class="term-count"><%= term.count %></span>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  <% } %>
+</div>

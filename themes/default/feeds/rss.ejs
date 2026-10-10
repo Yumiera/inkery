@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title><%= site.title %></title>
+    <link><%= feed.homeUrl %></link>
+    <description><%= site.description %></description>
+    <language><%= site.lang %></language>
+    <lastBuildDate><%= feed.buildDate %></lastBuildDate>
+    <generator>Inkery</generator>
+    <atom:link href="<%= feed.selfUrl %>" rel="self" type="application/rss+xml"/>
+<% for (const item of posts) { %>
+    <item>
+      <title><%= item.title %></title>
+      <link><%= item.permalink %></link>
+      <guid isPermaLink="true"><%= item.permalink %></guid>
+      <pubDate><%= helpers.rfc822(item.date) %></pubDate>
+<% if (item.updated) { %>      <atom:updated><%= helpers.dateTime(item.updated) %></atom:updated>
+<% } %><% for (const category of item.categories) { %>      <category><%= category.name %></category>
+<% } %><% for (const tag of item.tags) { %>      <category><%= tag.name %></category>
+<% } %>      <description><![CDATA[<%= helpers.cdata(item.excerpt) %>]]></description>
+      <content:encoded><![CDATA[<%= helpers.cdata(item.html) %>]]></content:encoded>
+    </item>
+<% } %>
+  </channel>
+</rss>

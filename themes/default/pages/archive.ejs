@@ -1,0 +1,25 @@
+<div class="container">
+  <header class="page-head">
+    <h1 class="page-title">归档</h1>
+    <p class="page-sub">共 <%= posts.length %> 篇</p>
+  </header>
+
+  <% if (archive.length === 0) { %>
+    <p class="empty">这里还没有文章。</p>
+  <% } else { %>
+    <% for (const group of archive) { %>
+      <section class="archive-group">
+        <h2 class="archive-year"><%= group.year %><span class="archive-count"><%= group.posts.length %></span></h2>
+        <ul class="archive-list">
+          <% for (const item of group.posts) { %>
+            <li class="archive-item">
+              <time datetime="<%= helpers.dateTime(item.date) %>"><%= item.date.slice(5, 10) %></time>
+              <a class="archive-link" href="<%= item.url %>"><%= item.title %></a>
+              <% if (item.pinned) { %><span class="badge badge-pinned">置顶</span><% } %>
+            </li>
+          <% } %>
+        </ul>
+      </section>
+    <% } %>
+  <% } %>
+</div>

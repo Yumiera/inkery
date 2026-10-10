@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="post-layout<%= toc.length > 1 ? '' : ' no-toc' %>">
+    <article class="post post-page">
+      <header class="post-header">
+        <h1 class="post-title"><%= post.title %></h1>
+      </header>
+
+      <% if (toc.length > 1) { %>
+        <details class="post-toc-inline">
+          <summary>目录</summary>
+          <%- include('/partials/toc') %>
+        </details>
+      <% } %>
+
+      <div class="post-body">
+        <%- post.html %>
+      </div>
+    </article>
+
+    <% if (toc.length > 1) { %>
+      <aside class="post-aside">
+        <div class="post-aside-sticky">
+          <%- include('/partials/toc') %>
+        </div>
+      </aside>
+    <% } %>
+  </div>
+</div>

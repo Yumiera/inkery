@@ -1,0 +1,9 @@
+<% if (breadcrumb && breadcrumb.length > 1) { %>
+<nav class="breadcrumb" aria-label="面包屑">
+  <ol>
+    <% for (let i = 0; i < breadcrumb.length; i++) { %>
+      <li><% if (i === breadcrumb.length - 1) { %><span aria-current="page"><%= breadcrumb[i].name %></span><% } else { %><a href="<%= breadcrumb[i].url %>"><%= breadcrumb[i].name %></a><% } %></li>
+    <% } %>
+  </ol>
+</nav>
+<% } %>

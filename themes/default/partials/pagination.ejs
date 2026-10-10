@@ -1,0 +1,25 @@
+<% if (pagination && pagination.total > 1) { %>
+<nav class="pagination" aria-label="分页">
+  <% if (pagination.hasPrev) { %>
+    <a class="page-link" rel="prev" href="<%= pagination.prevUrl %>">上一页</a>
+  <% } else { %>
+    <span class="page-link is-disabled" aria-disabled="true">上一页</span>
+  <% } %>
+
+  <% for (const link of pagination.links) { %>
+    <% if (link.page === -1) { %>
+      <span class="page-gap">…</span>
+    <% } else if (link.current) { %>
+      <span class="page-link is-current" data-page="<%= link.page %>" aria-current="page"><%= link.page %></span>
+    <% } else { %>
+      <a class="page-link" data-page="<%= link.page %>" href="<%= link.url %>"><%= link.page %></a>
+    <% } %>
+  <% } %>
+
+  <% if (pagination.hasNext) { %>
+    <a class="page-link" rel="next" href="<%= pagination.nextUrl %>">下一页</a>
+  <% } else { %>
+    <span class="page-link is-disabled" aria-disabled="true">下一页</span>
+  <% } %>
+</nav>
+<% } %>

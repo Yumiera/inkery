@@ -1,0 +1,41 @@
+<div class="container">
+<% if (taxonomy && terms.length > 0) { %>
+  <header class="page-head">
+    <p class="section-label"><%= taxonomy === 'tags' ? '标签' : '分类' %></p>
+    <h1 class="page-title"><%= terms[0].name %></h1>
+    <p class="page-sub"><%= terms[0].count %> 篇文章</p>
+  </header>
+<% } else if (pagination && pagination.current > 1) { %>
+  <header class="page-head">
+    <h1 class="page-title">第 <%= pagination.current %> 页</h1>
+    <p class="page-sub">共 <%= pagination.total %> 页</p>
+  </header>
+<% } else { %>
+  <header class="home-hero">
+    <h1 class="home-title"><%= site.title %></h1>
+    <% if (site.subtitle || site.description) { %>
+      <p class="home-sub" data-typing-root>
+        <span class="sr-only"><%= site.subtitle || site.description %></span>
+        <span data-typing aria-hidden="true"><%= site.subtitle || site.description %></span><span class="typing-caret" aria-hidden="true"></span>
+      </p>
+    <% } %>
+  </header>
+<% } %>
+
+<% if (!taxonomy && (!pagination || pagination.current === 1)) { %>
+  <div class="section-head">
+    <h2 class="section-label">最新文章</h2>
+    <a class="section-more" href="<%= helpers.url('/archives/') %>">全部文章<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></a>
+  </div>
+<% } %>
+
+<% if (posts.length === 0) { %>
+  <p class="empty">这里还没有文章。</p>
+<% } else { %>
+  <div class="post-list">
+    <% for (const item of posts) { %><%- include('/partials/post-card', { post: item }) %><% } %>
+  </div>
+<% } %>
+
+<%- include('/partials/pagination') %>
+</div>

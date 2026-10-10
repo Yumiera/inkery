@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.deploy/
+.cache/
+admin/dist/
+blog.config.json
+.env
+.env.*
+*.log
+.DS_Store

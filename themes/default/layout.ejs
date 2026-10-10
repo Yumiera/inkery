@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="<%= page.lang %>" data-color-mode="<%= theme.colorMode %>">
+<head>
+<%- include('/partials/head') %>
+</head>
+<body class="page-<%= page.type %>">
+<a class="skip-link" href="#main">跳到正文</a>
+<%- include('/partials/header') %>
+<main class="site-main" id="main">
+<%- body %>
+</main>
+<%- include('/partials/footer') %>
+<script type="module" src="<%= theme.assets.js %>?v=<%= theme.assets.version %>"></script>
+</body>
+</html>
