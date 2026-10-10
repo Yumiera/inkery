@@ -15,6 +15,18 @@ const httpUrl = z
   .trim()
   .refine((value) => value === '' || /^https?:\/\/[^\s]+$/i.test(value), '需为 http(s):// 开头的完整地址');
 
+const verifyCode = z
+  .string()
+  .trim()
+  .refine((value) => value === '' || /^[\w.\-+/=]+$/.test(value), '验证码只能包含字母、数字与 . - _ + / =');
+
+const verifyPatch = z.object({
+  google: verifyCode,
+  bing: verifyCode,
+  baidu: verifyCode,
+  yandex: verifyCode,
+});
+
 const sitePatch = z.object({
   title: z.string().trim().min(1, '站点标题不能为空'),
   subtitle: z.string(),
@@ -29,6 +41,7 @@ const sitePatch = z.object({
     .string()
     .trim()
     .refine((value) => value === '' || value.startsWith('/'), '需以 / 开头，根路径写 /'),
+  verify: verifyPatch,
 });
 
 const deployPatch = z.object({
@@ -63,6 +76,7 @@ function editableView(loaded: LoadedConfig) {
       timezone: site.timezone,
       url: site.url,
       baseUrl: site.baseUrl,
+      verify: site.verify,
     } satisfies EditableSite,
     deploy: {
       enabled: deploy.enabled,

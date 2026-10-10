@@ -18,6 +18,7 @@ import { createMetaRoutes } from './routes/meta';
 import { createPostRoutes } from './routes/posts';
 import { createPreviewRoutes } from './routes/preview';
 import { createRenderRoutes } from './routes/render';
+import { createVerifyRoutes } from './routes/verify';
 import { distRelPath, serveStaticPath } from './static';
 import type { AdminDevMiddleware, ConnectNext } from './vite-mw';
 
@@ -91,6 +92,7 @@ export function createBlogServer(options: CreateServerOptions): BlogServerApp {
   app.route('/api', createBuildRoutes(ctx));
   app.route('/api', createDeployRoutes(ctx));
   app.route('/api', createConfigRoutes(ctx));
+  app.route('/api', createVerifyRoutes(ctx));
   app.route('/api', createPreviewRoutes(ctx));
   app.all('/api/*', (c) =>
     c.json({ error: 'not_found', message: `未知 API：${c.req.method} ${c.req.path}` }, 404),

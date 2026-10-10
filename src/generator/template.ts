@@ -22,6 +22,12 @@ export interface SiteView {
   logo: string;
   favicon: string;
   footerHtml: string;
+  verify: {
+    google: string;
+    bing: string;
+    baidu: string;
+    yandex: string;
+  };
 }
 
 export interface ThemeAssetsView {

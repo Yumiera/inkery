@@ -4,6 +4,7 @@
 <% if (page.description) { %><meta name="description" content="<%= page.description %>">
 <% } %><% if (site.keywords.length > 0) { %><meta name="keywords" content="<%= site.keywords.join(',') %>">
 <% } %><% if (site.author) { %><meta name="author" content="<%= site.author %>">
+<% } %><% const VERIFY_TAGS = [['google', 'google-site-verification'], ['bing', 'msvalidate.01'], ['baidu', 'baidu-site-verification'], ['yandex', 'yandex-verification']]; %><% for (const [key, name] of VERIFY_TAGS) { const code = site.verify[key]; if (!code) continue; %><meta name="<%= name %>" content="<%= code %>">
 <% } %><meta name="robots" content="<%= page.robots %>">
 <link rel="canonical" href="<%= page.canonical %>">
 <meta name="color-scheme" content="light dark">

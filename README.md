@@ -84,7 +84,7 @@ inkery/
 
 | 段 | 关键字段 |
 | --- | --- |
-| `site` | `title` `subtitle` `description` `keywords` `author` `email` `lang` `timezone` `url` `baseUrl` `logo` `favicon` `defaultCover` `footerHtml` |
+| `site` | `title` `subtitle` `description` `keywords` `author` `email` `lang` `timezone` `url` `baseUrl` `logo` `favicon` `defaultCover` `footerHtml` `verify` |
 | `navigation` | `{ text, link }[]`，顶部导航 |
 | `social` | `{ name, link, icon }[]`，页脚社交链接 |
 | `permalinkPattern` | 文章永久链接模板，必须包含 `:slug`，默认 `/posts/:slug/` |
@@ -212,6 +212,23 @@ themes/default/
 索引在首次打开搜索时才懒加载，体积随文章总字数线性增长（当前示例两篇文章约 14 KB）。索引只覆盖与列表一致的文章——`hidden: true` 与未到发布时间的定时文章都不在内，与 sitemap 的取舍一致。
 
 关闭搜索把 `theme.config.showSearch` 设为 `false`。搜索依赖前端脚本，禁用 JavaScript 时页头按钮不会响应。
+
+## 站点验证
+
+搜索引擎的所有权验证支持两种方式，都在墨台设置页的「站点验证」卡片里完成。
+
+**meta 标签**：把验证码填进 `site.verify`，构建时输出对应标签。
+
+| 平台 | 配置字段 | 输出的 meta name |
+| --- | --- | --- |
+| Google | `site.verify.google` | `google-site-verification` |
+| Bing | `site.verify.bing` | `msvalidate.01` |
+| 百度 | `site.verify.baidu` | `baidu-site-verification` |
+| Yandex | `site.verify.yandex` | `yandex-verification` |
+
+留空的平台不输出任何标签。验证码只接受字母、数字与 `.-_+/=`，含引号等字符会被拒绝。
+
+**验证文件**：只提供文件的平台（如 Bing 的 `BingSiteAuth.xml`、Google 的 `google<hash>.html`）可在同一张卡片上传。文件写入 `content/static/`，随构建原样发布到站点根目录，列表里的文件名即线上路径。上传限制：仅根目录、扩展名限 `.html` / `.htm` / `.xml` / `.txt`、单文件不超过 1 MB，文件名不得含路径分隔符。
 
 ## 技术栈
 

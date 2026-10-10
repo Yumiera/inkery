@@ -21,6 +21,7 @@ export const defaultConfig: Config = {
     favicon: '',
     defaultCover: '',
     footerHtml: '',
+    verify: { google: '', bing: '', baidu: '', yandex: '' },
   },
   navigation: [
     { text: '首页', link: '/' },

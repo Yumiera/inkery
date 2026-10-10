@@ -167,6 +167,7 @@ export class SiteBuilder {
       logo: config.site.logo,
       favicon: config.site.favicon,
       footerHtml: config.site.footerHtml,
+      verify: config.site.verify,
     };
 
     this.accentColor = themeString(themeConfig, 'accentColor', DEFAULT_ACCENT);

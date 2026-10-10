@@ -6,6 +6,8 @@ admin/dist/
 blog.config.json
 content/posts/moectf2024/
 content/static/Moectf2024/
+content/static/BingSiteAuth.xml
+content/static/google0230eb27496393b7.html
 .env
 .env.*
 *.log

@@ -1,6 +1,16 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
-import { api, type ConfigPayload, type DeploySettings, type SiteSettings } from '../api';
-import { errorToast, refreshMeta, toast } from '../store';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import {
+  api,
+  type ConfigPayload,
+  type DeploySettings,
+  type SiteSettings,
+  type VerifyFile,
+} from '../api';
+import { errorToast, meta, refreshMeta, toast } from '../store';
+
+function formatSize(bytes: number): string {
+  return bytes < 1024 ? `${bytes} B` : `${(bytes / 1024).toFixed(1)} KB`;
+}
 
 function parseKeywords(value: string): string[] {
   return value
@@ -54,6 +64,9 @@ export function SettingsPage() {
   const [baseline, setBaseline] = useState('');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [files, setFiles] = useState<VerifyFile[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   const apply = (data: ConfigPayload): void => {
     setPayload(data);
@@ -71,6 +84,13 @@ export function SettingsPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    void api
+      .listVerifyFiles()
+      .then((result) => setFiles(result.items))
+      .catch(errorToast);
+  }, []);
+
   const draft = useMemo(() => {
     if (site === null || deploy === null) return null;
     return { site: { ...site, keywords: parseKeywords(keywords) }, deploy };
@@ -78,8 +98,12 @@ export function SettingsPage() {
 
   const dirty = draft !== null && baseline !== '' && JSON.stringify(draft) !== baseline;
 
-  const patchSite = (key: keyof SiteSettings, value: string): void =>
+  const patchSite = (key: Exclude<keyof SiteSettings, 'verify'>, value: string): void =>
     setSite((current) => (current === null ? current : { ...current, [key]: value }));
+  const patchVerify = (key: keyof SiteSettings['verify'], value: string): void =>
+    setSite((current) =>
+      current === null ? current : { ...current, verify: { ...current.verify, [key]: value } },
+    );
   const patchDeploy = <K extends keyof DeploySettings>(key: K, value: DeploySettings[K]): void =>
     setDeploy((current) => (current === null ? current : { ...current, [key]: value }));
 
@@ -95,6 +119,29 @@ export function SettingsPage() {
       errorToast(error);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const uploadVerifyFile = async (file: File): Promise<void> => {
+    setUploading(true);
+    try {
+      const result = await api.uploadVerifyFile(file);
+      setFiles(result.items);
+      toast(`已上传 ${file.name}`, 'success');
+    } catch (error) {
+      errorToast(error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeVerifyFile = async (name: string): Promise<void> => {
+    try {
+      const result = await api.deleteVerifyFile(name);
+      setFiles(result.items);
+      toast(`已删除 ${name}`, 'success');
+    } catch (error) {
+      errorToast(error);
     }
   };
 
@@ -177,6 +224,92 @@ export function SettingsPage() {
               onInput={(event) => patchSite('description', event.currentTarget.value)}
             />
           </label>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>站点验证</h2>
+          <span class="muted">填入各平台验证码，构建时输出对应的 meta 标签，无需上传文件</span>
+        </div>
+        <div class="form-grid">
+          <Field
+            label="Google"
+            value={site.verify.google}
+            placeholder="google-site-verification"
+            onInput={(value) => patchVerify('google', value)}
+          />
+          <Field
+            label="Bing"
+            value={site.verify.bing}
+            placeholder="msvalidate.01"
+            onInput={(value) => patchVerify('bing', value)}
+          />
+          <Field
+            label="百度"
+            value={site.verify.baidu}
+            placeholder="baidu-site-verification"
+            onInput={(value) => patchVerify('baidu', value)}
+          />
+          <Field
+            label="Yandex"
+            value={site.verify.yandex}
+            placeholder="yandex-verification"
+            onInput={(value) => patchVerify('yandex', value)}
+          />
+        </div>
+
+        <div class="verify-files">
+          <div class="verify-files-head">
+            <span class="muted">验证文件（发布到站点根目录）</span>
+            <span class="spacer" />
+            <button
+              class="btn btn-sm"
+              disabled={uploading}
+              onClick={() => fileInput.current?.click()}
+            >
+              {uploading ? '上传中…' : '上传文件'}
+            </button>
+            <input
+              ref={fileInput}
+              class="verify-input"
+              type="file"
+              accept=".html,.htm,.xml,.txt"
+              onChange={(event) => {
+                const picked = event.currentTarget.files?.[0];
+                event.currentTarget.value = '';
+                if (picked) void uploadVerifyFile(picked);
+              }}
+            />
+          </div>
+          {files.length === 0 ? (
+            <p class="muted">
+              暂无文件。可上传 .html / .xml / .txt，例如 BingSiteAuth.xml 或 google 开头的验证页。
+            </p>
+          ) : (
+            <ul class="verify-list">
+              {files.map((item) => (
+                <li key={item.name}>
+                  <a
+                    class="mono"
+                    href={`${meta.value?.siteUrl ?? ''}/${item.name}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    /{item.name}
+                  </a>
+                  <span class="muted">{formatSize(item.size)}</span>
+                  <span class="spacer" />
+                  <button
+                    class="btn btn-ghost btn-sm btn-danger"
+                    onClick={() => void removeVerifyFile(item.name)}
+                  >
+                    删除
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
 

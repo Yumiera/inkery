@@ -29,6 +29,12 @@ export const configSchema = z
       favicon: z.string(),
       defaultCover: z.string(),
       footerHtml: z.string(),
+      verify: z.object({
+        google: z.string(),
+        bing: z.string(),
+        baidu: z.string(),
+        yandex: z.string(),
+      }),
     }),
     navigation: z.array(navItemSchema),
     social: z.array(socialItemSchema),

@@ -153,6 +153,12 @@ export interface SiteSettings {
   timezone: string;
   url: string;
   baseUrl: string;
+  verify: {
+    google: string;
+    bing: string;
+    baidu: string;
+    yandex: string;
+  };
 }
 
 export interface DeploySettings {
@@ -180,6 +186,17 @@ export interface SaveConfigResult extends ConfigPayload {
   ok: true;
   reused: boolean;
   buildId: string;
+}
+
+export interface VerifyFile {
+  name: string;
+  size: number;
+  mtimeMs: number;
+}
+
+export interface VerifyFilesResult {
+  dir: string;
+  items: VerifyFile[];
 }
 
 export interface ConflictSnapshot {
@@ -328,6 +345,17 @@ export const api = {
 
   saveConfig: (patch: { site?: Partial<SiteSettings>; deploy?: Partial<DeploySettings> }) =>
     request<SaveConfigResult>('/api/config', json('PUT', patch)),
+
+  listVerifyFiles: () => request<VerifyFilesResult>('/api/verify/files'),
+
+  uploadVerifyFile: (file: File) => {
+    const form = new FormData();
+    form.set('file', file, file.name);
+    return request<VerifyFilesResult & { ok: true }>('/api/verify/files', { method: 'POST', body: form });
+  },
+
+  deleteVerifyFile: (name: string) =>
+    request<VerifyFilesResult & { ok: true }>(`/api/verify/files/${encodeURIComponent(name)}`, json('DELETE')),
 
   readAutosave: (slug: string) =>
     request<{ exists: boolean; savedAt?: number; body?: string; frontmatter?: PostFrontmatter }>(
