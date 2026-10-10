@@ -269,6 +269,7 @@ export class SiteBuilder {
     };
 
     this.report('pages', 0, 1, '规划路由');
+    const routeWarnings: string[] = [];
     const taxonomy = buildTaxonomy(listed);
     const htmlRoutes: RoutePlan[] = [
       ...planRoutes({
@@ -278,6 +279,7 @@ export class SiteBuilder {
         listed,
         hidden,
         pages: index.pages,
+        warnings: routeWarnings,
       }),
       ...planTaxonomyRoutes(taxonomy, listed, this.baseUrl, this.postsPerPage),
     ];
@@ -337,6 +339,7 @@ export class SiteBuilder {
       ...this.engine.highlighter.warnings,
       ...variantResult.warnings,
       ...[...docs.values()].flatMap((doc) => doc.warnings),
+      ...routeWarnings,
     ]);
 
     const stats: BuildStats = {

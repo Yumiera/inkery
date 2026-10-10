@@ -85,6 +85,8 @@ export interface RouteInput {
   /** 需要生成页面但不出现在列表中的文章（hidden） */
   hidden: PostEntry[];
   pages: PageEntry[];
+  /** 可选：收集路由规划中的告警（如 alias 与已有路由冲突） */
+  warnings?: string[];
 }
 
 /** URL → dist 内文件路径：以 `/` 结尾视为目录型 URL，落到 index.html */
@@ -149,12 +151,24 @@ export function planRoutes(input: RouteInput): RoutePlan[] {
 
   routes.push({ kind: 'notfound', url: toUrl('/404.html', baseUrl), outPath: '404.html' });
 
+  /* 大小写不敏感比较：Windows / macOS 上 /posts/Abc/ 与 /posts/abc/ 会写到同一个文件 */
+  const seenUrls = new Set(routes.map((route) => route.url.toLowerCase()));
+
   for (const post of [...listed, ...hidden]) {
     for (const alias of post.frontmatter.aliases ?? []) {
       const name = alias.trim();
       if (name === '' || name === post.frontmatter.slug) continue;
       const url = toUrl(permalinkPattern.replace(/:slug/g, name), baseUrl);
-      if (routes.some((route) => route.url === url)) continue;
+      const key = url.toLowerCase();
+      if (seenUrls.has(key)) {
+        const owner = routes.find((route) => route.url.toLowerCase() === key);
+        input.warnings?.push(
+          `别名「${name}」解析为 ${url}，与 ${owner?.url ?? '已有路由'} 仅大小写不同，` +
+            `在大小写不敏感的文件系统上会互相覆盖，已跳过：${post.relDir}`,
+        );
+        continue;
+      }
+      seenUrls.add(key);
       routes.push({ kind: 'alias', url, outPath: outPathFor(url), target: post.derived.url });
     }
   }

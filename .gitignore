@@ -4,6 +4,8 @@ dist/
 .cache/
 admin/dist/
 blog.config.json
+content/posts/moectf2024/
+content/static/Moectf2024/
 .env
 .env.*
 *.log
