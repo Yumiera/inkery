@@ -38,6 +38,7 @@ export const defaultConfig: Config = {
       postsPerPage: 10,
       tocDepth: 3,
       showReadingTime: true,
+      showSearch: true,
       codeTheme: { light: 'github-light', dark: 'github-dark' },
     },
   },

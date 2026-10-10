@@ -1,5 +1,6 @@
 import { initCodeCopy } from './code';
 import { initHeaderScroll, initReadingProgress, initTypewriter } from './effects';
+import { initSearch } from './search';
 import { initTocScrollSpy } from './toc';
 
 const COLOR_KEY = 'inkery-color-mode';
@@ -71,6 +72,7 @@ function boot(): void {
   initReadingProgress();
   initTocScrollSpy();
   initCodeCopy();
+  initSearch();
 }
 
 if (document.readyState === 'loading') {

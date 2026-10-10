@@ -36,6 +36,7 @@ export interface ThemeView {
   accentColor: string;
   colorMode: string;
   showReadingTime: boolean;
+  showSearch: boolean;
   tocDepth: number;
   assets: ThemeAssetsView;
 }

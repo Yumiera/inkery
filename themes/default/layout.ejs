@@ -10,6 +10,19 @@
 <%- body %>
 </main>
 <%- include('/partials/footer') %>
+<% if (theme.showSearch) { %>
+<div class="search-overlay" data-search-overlay>
+  <div class="search-panel" role="dialog" aria-modal="true" aria-label="搜索文章">
+    <div class="search-field">
+      <svg class="search-field-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="6.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.6 15.6 20.5 20.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input class="search-input" type="search" placeholder="搜索标题、标签或正文…" aria-label="搜索关键词" autocomplete="off" spellcheck="false" data-search-input>
+      <kbd class="search-kbd">Esc</kbd>
+    </div>
+    <div class="search-results" role="listbox" aria-label="搜索结果" data-search-results></div>
+    <p class="search-hint" data-search-hint>输入关键词开始搜索<span class="search-hint-keys">↑↓ 选择<span class="sep" aria-hidden="true"></span>Enter 打开<span class="sep" aria-hidden="true"></span>Esc 关闭</span></p>
+  </div>
+</div>
+<% } %>
 <script type="module" src="<%= theme.assets.js %>?v=<%= theme.assets.version %>"></script>
 </body>
 </html>

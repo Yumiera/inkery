@@ -22,6 +22,7 @@ import { BuildCache, ENGINE_REVISION, type CachedDocument } from './cache';
 import { renderRss } from './feeds';
 import { buildPager, indexPageUrl } from './pagination';
 import { outPathFor, planRoutes, planTaxonomyRoutes, termUrl, type RoutePlan } from './routes';
+import { renderSearchIndex } from './search';
 import { renderRobots, renderSitemap, type SitemapEntry } from './sitemap';
 import {
   TemplateEngine,
@@ -133,6 +134,7 @@ export class SiteBuilder {
   private readonly accentColor: string;
   private readonly colorMode: string;
   private readonly showReadingTime: boolean;
+  private readonly showSearch: boolean;
   private readonly tocDepth: number;
   private readonly variants: VariantBuilder;
   /** 同步查表，供 markdown 渲染与封面使用 */
@@ -171,6 +173,7 @@ export class SiteBuilder {
     this.colorMode = themeString(themeConfig, 'colorMode', 'auto');
     this.postsPerPage = themeNumber(themeConfig, 'postsPerPage', 10);
     this.showReadingTime = themeBoolean(themeConfig, 'showReadingTime', true);
+    this.showSearch = themeBoolean(themeConfig, 'showSearch', true);
     this.tocDepth = themeNumber(themeConfig, 'tocDepth', 3);
 
     this.theme = {
@@ -179,6 +182,7 @@ export class SiteBuilder {
       accentColor: this.accentColor,
       colorMode: this.colorMode,
       showReadingTime: this.showReadingTime,
+      showSearch: this.showSearch,
       tocDepth: this.tocDepth,
       assets: { css: '', js: '', version: '' },
     };
@@ -334,6 +338,7 @@ export class SiteBuilder {
       renderSitemap(this.templates, this.baseData(this.homeMeta()), sitemapEntries),
     );
     writer.add('robots.txt', renderRobots(this.templates, this.baseData(this.homeMeta())));
+    writer.add('search.json', renderSearchIndex(listViews));
 
     this.report('write', 0, writer.count, '写出 dist');
     const writeResult = await writer.commit(config.build.concurrency);
