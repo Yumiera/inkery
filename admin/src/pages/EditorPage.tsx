@@ -231,7 +231,7 @@ export function EditorPage({ slug }: { slug: string }) {
 
       adopt(current);
       dirtyRef.current = false;
-      setStatusText(`已保存 · ${new Date().toLocaleTimeString()}`);
+      setStatusText(`已保存 ${new Date().toLocaleTimeString()}`);
       await refreshPosts();
 
       if (options.build === true) {
@@ -511,7 +511,17 @@ export function EditorPage({ slug }: { slug: string }) {
           </button>
         ))}
         <span class="spacer" />
-        <span class="muted">{detail ? `${detail.wordCount} 字 · ${detail.readingTime} 分钟` : ''}</span>
+        <span class="muted">
+          {detail ? (
+            <>
+              {detail.wordCount} 字{' '}
+              <span class="sep" aria-hidden="true" />{' '}
+              {detail.readingTime} 分钟
+            </>
+          ) : (
+            ''
+          )}
+        </span>
       </div>
 
       <div class="split">

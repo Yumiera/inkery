@@ -85,7 +85,13 @@ export function DeployPanel() {
         {target !== null && target.configured ? (
           <span class="muted mono" title={target.repo}>
             {shortRepo(target.repo)}@{target.branch}
-            {target.cname !== '' ? ` · ${target.cname}` : ''}
+            {target.cname !== '' ? (
+              <>
+                {' '}
+                <span class="sep" aria-hidden="true" />{' '}
+                {target.cname}
+              </>
+            ) : null}
           </span>
         ) : null}
         {target?.pagesUrl ? (

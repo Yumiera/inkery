@@ -23,11 +23,21 @@ export function BuildPanel() {
         <i style={{ width: `${percent}%` }} />
       </div>
       <span>
-        {state === null
-          ? '尚未构建'
-          : `${state.status === 'error' ? '失败：' : ''}${state.message}${
-              running ? ` · ${state.phase} ${state.current}/${state.total}` : ''
-            }`}
+        {state === null ? (
+          '尚未构建'
+        ) : (
+          <>
+            {state.status === 'error' ? '失败：' : ''}
+            {state.message}
+            {running ? (
+              <>
+                {' '}
+                <span class="sep" aria-hidden="true" />{' '}
+                {state.phase} {state.current}/{state.total}
+              </>
+            ) : null}
+          </>
+        )}
       </span>
       {state?.status === 'error' && state.errors.length > 0 ? (
         <span class="muted" title={state.errors.join('\n')}>

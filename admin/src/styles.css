@@ -245,6 +245,18 @@ label {
   flex: 1;
 }
 
+/* ---------- 分隔符 ---------- */
+
+.sep {
+  display: inline-block;
+  width: 1px;
+  height: 10px;
+  margin: 0 5px;
+  background: var(--border);
+  vertical-align: -1px;
+  flex: none;
+}
+
 /* ---------- 控件 ---------- */
 
 .btn {

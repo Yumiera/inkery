@@ -60,12 +60,23 @@ function Sidebar() {
           总数 <b>{overview.value.total}</b>
         </div>
         <div>
-          已发布 <b>{overview.value.published}</b> · 草稿 <b>{overview.value.drafts}</b> · 定时{' '}
-          <b>{overview.value.scheduled}</b>
+          已发布 <b>{overview.value.published}</b>{' '}
+          <span class="sep" aria-hidden="true" />{' '}
+          草稿 <b>{overview.value.drafts}</b>{' '}
+          <span class="sep" aria-hidden="true" />{' '}
+          定时 <b>{overview.value.scheduled}</b>
         </div>
         <div>最近更新</div>
         <div>
-          {latest ? `${latest.title} · ${latest.updated ?? latest.date}` : '—'}
+          {latest ? (
+            <>
+              {latest.title}{' '}
+              <span class="sep" aria-hidden="true" />{' '}
+              {latest.updated ?? latest.date}
+            </>
+          ) : (
+            '—'
+          )}
         </div>
       </div>
 
@@ -80,7 +91,17 @@ function Sidebar() {
           <option value="light">浅色</option>
           <option value="dark">深色</option>
         </select>
-        <div>{meta.value ? `v${meta.value.version} · ${meta.value.mode}` : ''}</div>
+        <div>
+          {meta.value ? (
+            <>
+              v{meta.value.version}{' '}
+              <span class="sep" aria-hidden="true" />{' '}
+              {meta.value.mode}
+            </>
+          ) : (
+            ''
+          )}
+        </div>
         <div>
           <i class={`status-dot ${liveConnected.value ? 'on' : ''}`} /> 实时通道
         </div>

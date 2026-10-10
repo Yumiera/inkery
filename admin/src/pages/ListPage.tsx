@@ -122,7 +122,9 @@ export function ListPage() {
       <div class="page-head">
         <h1>文章</h1>
         <span class="muted">
-          共 {overview.value.total} 篇 · 草稿 {overview.value.drafts}
+          共 {overview.value.total} 篇{' '}
+          <span class="sep" aria-hidden="true" />{' '}
+          草稿 {overview.value.drafts}
         </span>
         <span class="spacer" />
         <button class="btn btn-sm" onClick={() => void refreshPosts()} disabled={postsLoading.value}>
@@ -202,7 +204,9 @@ export function ListPage() {
               </td>
               <td class="muted">{post.categories.join(' / ')}</td>
               <td class="muted">
-                {post.wordCount} 字 · {post.readingTime} 分
+                {post.wordCount} 字{' '}
+                <span class="sep" aria-hidden="true" />{' '}
+                {post.readingTime} 分
               </td>
               <td class="muted">{post.updated ?? post.date}</td>
               <td>
