@@ -50,7 +50,7 @@ function printReport(
   log.kv('标题', entry.frontmatter.title);
   log.kv('slug', entry.frontmatter.slug);
   log.kv('状态', entry.derived.state);
-  log.kv('字数', `${doc.wordCount} 字 · 阅读 ${doc.readingTime} 分钟`);
+  log.kv('字数', `${doc.wordCount} 字 | 阅读 ${doc.readingTime} 分钟`);
   log.kv('TOC', countLevels(doc));
   log.kv('图片', doc.images.length === 0 ? '无' : `${doc.images.length} 张（${withSize} 张带尺寸）`);
   log.kv('预加载语言', preloaded.length === 0 ? '无' : preloaded.join(' / '));

@@ -87,7 +87,7 @@ export async function run(argv: string[]): Promise<number> {
 
   const build = blog.builds.latest;
   if (build && build.status === 'done') {
-    log.success(`构建完成 · ${(build.finishedAt ?? 0) - build.startedAt} ms · ${build.changedUrls.length} 个 URL 变化`);
+    log.success(`构建完成 | ${(build.finishedAt ?? 0) - build.startedAt} ms | ${build.changedUrls.length} 个 URL 变化`);
   } else if (build && build.status === 'error') {
     log.warn(`构建未成功：${build.errors.join('；')}（可在墨台点「构建」重试）`);
   }
@@ -131,7 +131,7 @@ export async function run(argv: string[]): Promise<number> {
       .then(() => {
         const latest = blog.builds.latest;
         if (latest?.status === 'done') {
-          log.success(`已重建 · ${latest.changedUrls.length} 个 URL 变化`);
+          log.success(`已重建 | ${latest.changedUrls.length} 个 URL 变化`);
         } else {
           log.error(`重建失败：${latest?.errors.join('；') ?? '未知错误'}`);
         }
@@ -153,7 +153,7 @@ export async function run(argv: string[]): Promise<number> {
   watcher.on('error', (error) => log.warn(`文件监听出错：${messageOf(error)}`));
 
   log.blank();
-  log.plain(`  ${color.bold('Inkery')} ${color.gray(`v${VERSION}`)} · ${mode}`);
+  log.plain(`  ${color.bold('Inkery')} ${color.gray(`v${VERSION}`)} | ${mode}`);
   log.kv('Token', color.cyan(blog.token));
   log.kv('预览', color.cyan(`${blog.url}${loaded.config.site.baseUrl}`));
   log.kv('墨台', color.cyan(`${blog.url}/admin/`));

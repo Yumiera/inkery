@@ -78,7 +78,7 @@ export async function run(argv: string[]): Promise<number> {
     log.error(`${result.issues.length} 条内容问题：`);
     for (const issue of result.issues) {
       const where = issue.field ? `${issue.rel} [${issue.field}]` : issue.rel;
-      log.plain(`  ${color.yellow('·')} ${where} ${issue.message}`);
+      log.plain(`  ${color.yellow('|')} ${where} ${issue.message}`);
     }
     return 1;
   }

@@ -845,7 +845,7 @@ export class SiteBuilder {
           ogImage: this.ogImageFor('', undefined, undefined, this.site.title),
           jsonLd: this.serializeJsonLd(
             this.collectionJsonLd(
-              `${name} · ${label}`,
+              `${name} | ${label}`,
               route.url,
               description,
               posts.map((view) => ({ name: view.title, url: view.url })),

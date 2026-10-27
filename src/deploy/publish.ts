@@ -259,7 +259,7 @@ export async function publishDist(
   );
   if (!setRemote.ok) throw new DeployError(`配置 origin 失败：${setRemote.out}`);
 
-  hooks.onPhase?.('push', `推送 → ${settings.repo} (${settings.branch})${settings.forcePush ? ' · force' : ''}`);
+  hooks.onPhase?.('push', `推送 → ${settings.repo} (${settings.branch})${settings.forcePush ? ' | force' : ''}`);
   const pushArgs = ['push', ...(settings.forcePush ? ['--force'] : []), 'origin', `HEAD:refs/heads/${settings.branch}`];
   const push = git(pushArgs, stagingDir, inheritStdio);
   if (!push.ok) {

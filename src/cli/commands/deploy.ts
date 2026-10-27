@@ -127,11 +127,11 @@ export async function run(argv: string[]): Promise<number> {
         return 1;
       }
       log.error(`${result.issues.length} 条内容问题，已中止部署：`);
-      for (const issue of result.issues) log.plain(`  ${color.yellow('·')} ${issue.rel} ${issue.message}`);
+      for (const issue of result.issues) log.plain(`  ${color.yellow('|')} ${issue.rel} ${issue.message}`);
       return 1;
     }
     stats = result.stats;
-    if (!json) log.success(`构建完成 · ${result.stats.written} 个文件写出`);
+    if (!json) log.success(`构建完成 | ${result.stats.written} 个文件写出`);
   }
 
   try {

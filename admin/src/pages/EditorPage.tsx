@@ -31,9 +31,9 @@ function escapeHtml(value: string): string {
 function metaLine(frontmatter: PostFrontmatter | null, result: RenderResult): string {
   const parts: string[] = [];
   if (frontmatter?.date) parts.push(escapeHtml(frontmatter.date));
-  parts.push(`${result.wordCount} 字 · ${result.readingTime} 分钟`);
+  parts.push(`${result.wordCount} 字 | ${result.readingTime} 分钟`);
   for (const tag of frontmatter?.tags ?? []) parts.push(`#${escapeHtml(tag)}`);
-  return parts.join(' · ');
+  return parts.join(' | ');
 }
 
 const RENDER_DEBOUNCE_MS = 200;
