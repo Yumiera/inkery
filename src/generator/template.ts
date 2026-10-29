@@ -28,6 +28,10 @@ export interface SiteView {
     baidu: string;
     yandex: string;
   };
+  indexNow: {
+    enabled: boolean;
+    key: string;
+  };
 }
 
 export interface ThemeAssetsView {

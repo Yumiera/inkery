@@ -22,6 +22,7 @@ export const defaultConfig: Config = {
     defaultCover: '',
     footerHtml: '',
     verify: { google: '', bing: '', baidu: '', yandex: '' },
+    indexNow: { enabled: false, key: '' },
   },
   navigation: [
     { text: '首页', link: '/' },

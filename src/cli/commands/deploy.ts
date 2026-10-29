@@ -33,6 +33,7 @@ const PHASE_LABEL: Partial<Record<DeployPhase, string>> = {
   stage: '暂存',
   commit: '提交',
   push: '推送',
+  indexnow: '索引',
 };
 
 export async function run(argv: string[]): Promise<number> {
@@ -160,6 +161,7 @@ export async function run(argv: string[]): Promise<number> {
             pagesUrl: target,
             staging: result.stagingRel,
             build: stats,
+            indexNow: result.indexNow,
             warnings,
           },
           null,

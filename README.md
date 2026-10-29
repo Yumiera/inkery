@@ -84,7 +84,7 @@ inkery/
 
 | 段 | 关键字段 |
 | --- | --- |
-| `site` | `title` `subtitle` `description` `keywords` `author` `email` `lang` `timezone` `url` `baseUrl` `logo` `favicon` `defaultCover` `footerHtml` `verify` |
+| `site` | `title` `subtitle` `description` `keywords` `author` `email` `lang` `timezone` `url` `baseUrl` `logo` `favicon` `defaultCover` `footerHtml` `verify` `indexNow` |
 | `navigation` | `{ text, link }[]`，顶部导航 |
 | `social` | `{ name, link, icon }[]`，页脚社交链接 |
 | `permalinkPattern` | 文章永久链接模板，必须包含 `:slug`，默认 `/posts/:slug/` |
@@ -229,6 +229,24 @@ themes/default/
 留空的平台不输出任何标签。验证码只接受字母、数字与 `.-_+/=`，含引号等字符会被拒绝。
 
 **验证文件**：只提供文件的平台（如 Bing 的 `BingSiteAuth.xml`、Google 的 `google<hash>.html`）可在同一张卡片上传。文件写入 `content/static/`，随构建原样发布到站点根目录，列表里的文件名即线上路径。上传限制：仅根目录、扩展名限 `.html` / `.htm` / `.xml` / `.txt`、单文件不超过 1 MB，文件名不得含路径分隔符。
+
+## IndexNow
+
+IndexNow 让内容更新几分钟内进入 Bing、Yandex、Seznam 的抓取队列，不必等 sitemap 回读周期。
+
+```json
+"indexNow": {
+  "enabled": true,
+  "key": "0297d8b5142dec74650a6724f5ee50b4"
+}
+```
+
+密钥为 8–128 位字母、数字或连字符，可自行随机生成（如 `openssl rand -hex 16`）。启用后：
+
+- 构建时把 `<key>.txt` 写在站点根目录，内容即密钥本身，供 IndexNow 校验所有权
+- 部署成功推送后，收集产物内全部页面 URL（跳过后台 `admin/` 与 `404.html`），POST 到 `https://api.indexnow.org/indexnow`
+- 仅在有新提交时提交；`site.url` 为本地地址时自动跳过
+- 提交失败只记日志，不影响部署结果。首次启用时密钥文件可能尚未被 Pages 发布，返回 403 属正常，下一次部署会自动重试
 
 ## 技术栈
 

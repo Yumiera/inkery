@@ -3,12 +3,13 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { LoadedConfig } from '../config/load';
 import { relPath } from '../util/paths';
+import { collectPageUrls, submitIndexNow, type IndexNowOutcome } from './indexnow';
 
 export const STAGING_DIR = '.deploy';
 
 const GIT_TIMEOUT_MS = 10 * 60 * 1000;
 
-export type DeployPhase = 'precheck' | 'stage' | 'commit' | 'push' | 'done';
+export type DeployPhase = 'precheck' | 'stage' | 'commit' | 'push' | 'indexnow' | 'done';
 
 export interface DeploySettings {
   repo: string;
@@ -37,6 +38,7 @@ export interface PublishResult {
   repo: string;
   branch: string;
   stagingRel: string;
+  indexNow: IndexNowOutcome | null;
 }
 
 export interface ResolvedDeploy {
@@ -271,6 +273,30 @@ export async function publishDist(
   }
   if (!inheritStdio && push.out !== '') hooks.onLog?.(push.out);
 
+  let indexNow: IndexNowOutcome | null = null;
+  const indexNowConfig = config.site.indexNow;
+  if (indexNowConfig.enabled && indexNowConfig.key.trim() !== '' && committed) {
+    if (isLocalhostUrl(config.site.url)) {
+      hooks.onLog?.('IndexNow 已启用，但 site.url 仍是本地地址，跳过提交');
+    } else {
+      hooks.onPhase?.('indexnow', '提交 IndexNow');
+      const urls = await collectPageUrls(outDir, config.site.url, config.site.baseUrl);
+      indexNow = await submitIndexNow({
+        siteUrl: config.site.url,
+        key: indexNowConfig.key.trim(),
+        urls,
+      });
+      hooks.onLog?.(indexNow.message);
+    }
+  }
+
   hooks.onPhase?.('done', '部署完成');
-  return { committed, message: settings.message, repo: settings.repo, branch: settings.branch, stagingRel };
+  return {
+    committed,
+    message: settings.message,
+    repo: settings.repo,
+    branch: settings.branch,
+    stagingRel,
+    indexNow,
+  };
 }

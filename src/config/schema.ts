@@ -35,6 +35,15 @@ export const configSchema = z
         baidu: z.string(),
         yandex: z.string(),
       }),
+      indexNow: z.object({
+        enabled: z.boolean(),
+        key: z
+          .string()
+          .refine(
+            (value) => value === '' || /^[A-Za-z0-9-]{8,128}$/.test(value),
+            'IndexNow 密钥需为 8–128 位字母、数字或连字符',
+          ),
+      }),
     }),
     navigation: z.array(navItemSchema),
     social: z.array(socialItemSchema),

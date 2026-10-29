@@ -168,6 +168,7 @@ export class SiteBuilder {
       favicon: config.site.favicon,
       footerHtml: config.site.footerHtml,
       verify: config.site.verify,
+      indexNow: config.site.indexNow,
     };
 
     this.accentColor = themeString(themeConfig, 'accentColor', DEFAULT_ACCENT);
@@ -340,6 +341,9 @@ export class SiteBuilder {
     );
     writer.add('robots.txt', renderRobots(this.templates, this.baseData(this.homeMeta())));
     writer.add('search.json', renderSearchIndex(listViews));
+
+    const indexNowKey = this.site.indexNow.key.trim();
+    if (this.site.indexNow.enabled && indexNowKey !== '') writer.add(`${indexNowKey}.txt`, indexNowKey);
 
     this.report('write', 0, writer.count, '写出 dist');
     const writeResult = await writer.commit(config.build.concurrency);

@@ -7,6 +7,7 @@ const PHASE_LABEL: Record<string, string> = {
   stage: '暂存',
   commit: '提交',
   push: '推送',
+  indexnow: '索引',
   done: '完成',
 };
 
