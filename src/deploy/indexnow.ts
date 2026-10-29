@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const DEFAULT_ENDPOINT = 'https://api.indexnow.org/indexnow';
 const TIMEOUT_MS = 15_000;
+const NOINDEX = /<meta[^>]+name="robots"[^>]+content="[^"]*noindex/i;
 
 export interface IndexNowOutcome {
   ok: boolean;
@@ -11,7 +12,7 @@ export interface IndexNowOutcome {
   message: string;
 }
 
-/** 收集产物中可提交的页面绝对 URL，跳过后台、404 与隐藏目录 */
+/** 收集产物中可提交的页面绝对 URL，跳过后台、404、隐藏目录与 noindex 页面 */
 export async function collectPageUrls(
   outDir: string,
   siteUrl: string,
@@ -19,7 +20,7 @@ export async function collectPageUrls(
 ): Promise<string[]> {
   const root = `${siteUrl.replace(/\/+$/, '')}${baseUrl === '/' ? '/' : baseUrl}`;
   const entries = await fs.readdir(outDir, { recursive: true });
-  const urls = entries
+  const pages = entries
     .map((entry) => entry.split(path.sep).join('/'))
     .filter(
       (rel) =>
@@ -27,9 +28,15 @@ export async function collectPageUrls(
         rel !== '404.html' &&
         !rel.startsWith('admin/') &&
         !rel.split('/').some((part) => part.startsWith('.')),
-    )
-    .map((rel) => `${root}${rel.replace(/index\.html$/, '')}`);
-  return [...new Set(urls)].sort();
+    );
+
+  const indexable: string[] = [];
+  for (const rel of pages) {
+    const html = await fs.readFile(path.join(outDir, rel), 'utf8');
+    if (NOINDEX.test(html)) continue;
+    indexable.push(`${root}${rel.replace(/index\.html$/, '')}`);
+  }
+  return [...new Set(indexable)].sort();
 }
 
 /**
